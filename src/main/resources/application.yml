@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: pia-robot-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/pia_robot}
+    username: ${SPRING_DATASOURCE_USERNAME:pia_robot}
+    password: ${SPRING_DATASOURCE_PASSWORD:pia_robot}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:pia_robot}
+    password: ${SPRING_RABBITMQ_PASSWORD:pia_robot}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    env:
+      enabled: true
+
+pia:
+  rabbit:
+    game-events-exchange: pia.robot.game.events
+    game-events-queue: pia.robot.game.events.backend
+    game-events-routing-key: game.event
+    emotion-exchange: pia.robot.emotions
+    emotion-queue: pia.robot.emotions.eyes
+    emotion-routing-key: emotion.updated
+
+info:
+  app:
+    name: Piá Robot Backend
+    version: 0.1.0-SNAPSHOT
+    description: POC do backend central para sessões, pontuação e emoções.
