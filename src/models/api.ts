@@ -1,14 +1,21 @@
 import type {
   ApiErrorBody,
   ConnectionTestResult,
+  SessionLiveResponse,
   DeviceResponse,
   DeviceType,
+  Difficulty,
+  EmotionType,
+  GameEventResponse,
+  GameEventType,
+  GameSettings,
+  ManualEmotionResponse,
   SessionResponse,
   UserProfile,
 } from "./types";
 import { ownerEmailHeader } from "./ownerHeaders";
 import { getSession } from "./authLocal";
-import { normalizeSessionResponse } from "./sessionNormalize";
+import { normalizeSessionResponse, parseEmotion } from "./sessionNormalize";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
@@ -42,7 +49,10 @@ async function apiFetchRaw(path: string, init?: RequestInit): Promise<Response> 
   });
 }
 
-export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
   const res = await apiFetchRaw(path, init);
   const body = await parseJson(res);
   if (!res.ok) {
@@ -88,6 +98,12 @@ export const connectionTestApi = {
 
 export const devicesApi = {
   list: () => apiFetch<DeviceResponse[]>("/api/devices"),
+  listForOwner: (ownerEmail: string) =>
+    apiFetch<DeviceResponse[]>("/api/devices", {
+      headers: ownerEmailHeader(ownerEmail),
+    }),
+  get: (id: string) =>
+    apiFetch<DeviceResponse>(`/api/devices/${encodeURIComponent(id)}`),
   register: (
     name: string,
     type: DeviceType,
@@ -109,9 +125,104 @@ function normalizeSessions(list: SessionResponse[]): SessionResponse[] {
 export const sessionsApi = {
   listActive: () =>
     apiFetch<SessionResponse[]>("/api/sessions").then(normalizeSessions),
+  listActiveForOwner: (ownerEmail: string) =>
+    apiFetch<SessionResponse[]>("/api/sessions", {
+      headers: ownerEmailHeader(ownerEmail),
+    }).then(normalizeSessions),
+  listHistory: () =>
+    apiFetch<SessionResponse[]>("/api/sessions/history").then(normalizeSessions),
+  get: (id: string) =>
+    apiFetch<SessionResponse>(`/api/sessions/${encodeURIComponent(id)}`).then(
+      normalizeSessionResponse
+    ),
+  getLive: (id: string) =>
+    apiFetch<SessionLiveResponse>(
+      `/api/sessions/${encodeURIComponent(id)}/live`
+    ).then((s) => ({
+      ...s,
+      currentEmotion: parseEmotion(s.currentEmotion),
+    })),
+  getCurrentLive: async (ownerEmail: string): Promise<SessionLiveResponse | null> => {
+    const res = await apiFetchRaw("/api/sessions/current-live", {
+      headers: ownerEmailHeader(ownerEmail),
+    });
+    if (res.status === 204) return null;
+    const body = await parseJson(res);
+    if (!res.ok) {
+      const err = body as ApiErrorBody | null;
+      throw new Error(err?.message ?? `Erro HTTP ${res.status}`);
+    }
+    const s = body as SessionLiveResponse;
+    return {
+      ...s,
+      currentEmotion: parseEmotion(s.currentEmotion),
+    };
+  },
+  create: (gameCode: string, difficulty: Difficulty, ownerEmail?: string) =>
+    apiFetch<SessionResponse>("/api/sessions", {
+      method: "POST",
+      headers: ownerEmailHeader(ownerEmail),
+      body: JSON.stringify({ gameCode, difficulty }),
+    }).then(normalizeSessionResponse),
   claimUnowned: (ownerEmail?: string) =>
     apiFetch<void>("/api/sessions/claim-unowned", {
       method: "POST",
       headers: ownerEmailHeader(ownerEmail),
     }),
+  listEvents: (sessionId: string) =>
+    apiFetch<GameEventResponse[]>(`/api/sessions/${sessionId}/events`),
+  postEvent: (
+    sessionId: string,
+    type: GameEventType,
+    points: number,
+    ownerEmail?: string
+  ) =>
+    apiFetch<GameEventResponse>(`/api/sessions/${sessionId}/events`, {
+      method: "POST",
+      headers: ownerEmailHeader(ownerEmail),
+      body: JSON.stringify({ type, points }),
+    }),
+  setEmotion: (sessionId: string, emotion: EmotionType) =>
+    apiFetch<SessionResponse>(`/api/sessions/${sessionId}/emotion`, {
+      method: "POST",
+      body: JSON.stringify({ emotion }),
+    }).then(normalizeSessionResponse),
 };
+
+export const healthApi = {
+  health: () => apiFetch<{ status: string }>("/actuator/health"),
+};
+
+export const gameSettingsApi = {
+  get: () => apiFetch<GameSettings>("/api/game-settings"),
+  getForOwner: (ownerEmail: string) =>
+    apiFetch<GameSettings>("/api/game-settings", {
+      headers: { "X-Pia-User-Email": ownerEmail },
+    }),
+  update: (settings: GameSettings) =>
+    apiFetch<GameSettings>("/api/game-settings", {
+      method: "PUT",
+      body: JSON.stringify(settings),
+    }),
+};
+
+export const manualEmotionApi = {
+  get: () => apiFetch<ManualEmotionResponse>("/api/manual-emotion"),
+  getForOwner: (ownerEmail: string) =>
+    apiFetch<ManualEmotionResponse>("/api/manual-emotion", {
+      headers: { "X-Pia-User-Email": ownerEmail },
+    }),
+  update: (emotion: EmotionType) =>
+    apiFetch<ManualEmotionResponse>("/api/manual-emotion", {
+      method: "POST",
+      body: JSON.stringify({ emotion }),
+    }),
+};
+
+export const infoApi = {
+  info: () =>
+    apiFetch<{ app?: { name?: string; version?: string; description?: string } }>(
+      "/actuator/info"
+    ),
+};
+

@@ -2,16 +2,11 @@
 
 Publicação parcial do frontend React (Vite + TypeScript).
 
-## Telas incluídas nesta parte
+## Telas incluídas
 
-- Landing (tela inicial)
-- Login e cadastro
-- Recuperar senha
-- Menu principal (`/app`)
-- Perfil
-- Cadastrar celular / tablet (QR)
-- Gerenciar dispositivos
-- Testar conexão
+**Parte 1:** landing, login, cadastro, recuperar senha, menu, perfil, dispositivos (cadastrar/gerenciar/testar).
+
+**Parte 2:** tablet (`/tablet` — home, jogo, histórico, sobre), partidas no painel (iniciar, monitor, configurações, emoção manual), histórico e sobre no sistema web (`/app/historico`, `/app/sobre`).
 
 ## Como rodar
 
@@ -26,6 +21,6 @@ O proxy envia `/api` para `http://localhost:8080` (backend Spring Boot).
 
 Os vídeos das expressões ficam em `eyesOlharEmocional/OlharEmocional/assets/` e são servidos em desenvolvimento e build via `/olhar-emocional-assets/`.
 
-## Próximas partes (repositório completo)
+## Próximas partes
 
-Partidas, tablet, olhos em tempo real, histórico, configurações de jogo e demais telas serão adicionadas em commits futuros.
+Tela dos olhos no celular (`/olhos`) e sincronização em tempo real — commit futuro.

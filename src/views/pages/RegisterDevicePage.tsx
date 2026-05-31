@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { devicesApi, sessionsApi } from "../../models/api";
 import { isDeviceActiveStatus } from "../../models/deviceUtils";
-import { createPairingId } from "../../models/pairingId";
+import { createPairingId } from "../../models/devicePairing";
 import { resolveQrOriginBase } from "../../models/resolveQrOrigin";
 import { isLocalhostHostname } from "../../models/lanOriginGuess";
 import { getSession } from "../../models/authLocal";

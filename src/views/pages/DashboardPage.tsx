@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../controllers/AuthContext";
 import {
   IconDevices,
+  IconHistory,
+  IconInfo,
   IconPhone,
+  IconSettings,
+  IconSmile,
   IconTablet,
   IconUser,
   IconWifi,
@@ -29,8 +33,7 @@ export function DashboardPage() {
     };
   }, [confirmOut]);
 
-  return (
-    <div className="app-shell app-shell--dashboard">
+  return (    <div className="app-shell app-shell--dashboard">
       <div className="card">
         <header
           style={{
@@ -43,15 +46,9 @@ export function DashboardPage() {
         >
           <div>
             <h1 style={{ margin: "0 0 0.35rem" }}>Piá Robot Emotion</h1>
+            
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
             <span className="user-badge" title={user?.email}>
               <IconUser size={20} />
               {user?.name ?? user?.email}
@@ -79,6 +76,18 @@ export function DashboardPage() {
             <IconTablet /> Cadastrar tablet para jogo
           </Link>
           <Link
+            className="btn dashboard-menu-tile dashboard-menu-history"
+            to="/app/historico"
+          >
+            <IconHistory /> Histórico de partidas
+          </Link>
+          <Link className="btn dashboard-menu-tile dashboard-menu-about" to="/app/sobre">
+            <IconInfo /> Sobre
+          </Link>
+          <Link className="btn dashboard-menu-tile dashboard-menu-emotion" to="/app/emocoes">
+            <IconSmile /> Modificar emoção
+          </Link>
+          <Link
             className="btn dashboard-menu-tile dashboard-menu-devices"
             to="/app/dispositivos"
           >
@@ -89,6 +98,12 @@ export function DashboardPage() {
             to="/app/dispositivos/teste"
           >
             <IconWifi /> Testar conexão entre dispositivos
+          </Link>
+          <Link
+            className="btn dashboard-menu-tile dashboard-menu-settings"
+            to="/app/configuracao-jogo"
+          >
+            <IconSettings /> Configurações de jogo
           </Link>
           <Link className="btn dashboard-menu-tile dashboard-menu-profile" to="/app/perfil">
             <IconUser /> Perfil
@@ -104,13 +119,16 @@ export function DashboardPage() {
           aria-labelledby="logout-title"
           onClick={() => setConfirmOut(false)}
         >
-          <div className="tablet-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="tablet-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 id="logout-title" className="tablet-modal-title">
               Encerrar sessão?
             </h2>
             <p className="muted tablet-modal-body" style={{ marginTop: 0 }}>
-              Ao confirmar, sua sessão será encerrada e os dispositivos cadastrados serão
-              desativados.
+              Ao confirmar, sua sessão será encerrada e os dispositivos
+              cadastrados serão desativados.
             </p>
             <div
               style={{
@@ -138,7 +156,6 @@ export function DashboardPage() {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )}    </div>
   );
 }

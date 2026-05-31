@@ -2,6 +2,7 @@ export type DeviceType = "GAME_TABLET" | "EYES_PHONE";
 export type DeviceStatus = "ACTIVE" | "INACTIVE";
 export type Difficulty = "EASY" | "NORMAL" | "HARD";
 export type SessionStatus = "ACTIVE" | "FINISHED";
+export type GameEventType = "GAME_STARTED" | "HIT" | "MISS" | "GAME_FINISHED";
 export type EmotionType = "IDLE" | "FOCUSED" | "HAPPY" | "SAD" | "SURPRISED" | "CELEBRATING";
 
 export interface DeviceResponse {
@@ -30,6 +31,34 @@ export interface SessionResponse {
   finishedAt: string | null;
 }
 
+export interface SessionLiveResponse {
+  id: string;
+  status: SessionStatus;
+  playStarted: boolean;
+  currentEmotion: EmotionType;
+  score: number;
+  hits: number;
+  misses: number;
+}
+
+export interface GameSettings {
+  difficulty: Difficulty;
+  durationSec: number;
+  soundEnabled: boolean;
+}
+
+export interface ManualEmotionResponse {
+  emotion: EmotionType;
+}
+
+export interface GameEventResponse {
+  id: string;
+  sessionId: string;
+  type: GameEventType;
+  points: number;
+  createdAt: string;
+}
+
 export interface ApiErrorBody {
   message?: string;
   errors?: Record<string, string[]>;
@@ -52,3 +81,4 @@ export interface ConnectionTestResult {
   gameTabletMessage: string;
   summary: string;
 }
+
