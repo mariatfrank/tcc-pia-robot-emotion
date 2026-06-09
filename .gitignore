@@ -10,6 +10,16 @@ dist/
 .env.*
 !.env.example
 
+# Visual Studio
+.vs/
+bin/
+obj/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
 # IDE / SO
 .idea/
 .vscode/
