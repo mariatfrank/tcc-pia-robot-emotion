@@ -50,12 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearLastSessionLink();
     setSession(session);
     setSessionPassword(password);
+    setUser(session);
     try {
       await sessionsApi.claimUnowned();
     } catch {
-      return;
+      /* login permanece válido mesmo se a reivindicação falhar */
     }
-    setUser(session);
   }, []);
 
   const register = useCallback(async (name: string, email: string, password: string) => {

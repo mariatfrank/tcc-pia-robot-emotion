@@ -46,7 +46,7 @@ public class RobotSession {
     @Column(nullable = false)
     private int misses;
 
-    @Column(nullable = false, columnDefinition = "boolean not null default false")
+    @Column(nullable = false)
     @ColumnDefault("false")
     private boolean playStarted = false;
 

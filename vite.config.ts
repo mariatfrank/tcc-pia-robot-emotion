@@ -168,6 +168,9 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
+    fs: {
+      allow: [path.resolve(__dirname, ".")],
+    },
     proxy: {
       "/api": { target: "http://localhost:8080", changeOrigin: true },
       "/actuator": { target: "http://localhost:8080", changeOrigin: true },

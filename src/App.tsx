@@ -5,6 +5,7 @@ import { AboutPage } from "./views/pages/AboutPage";
 import { ConnectionTestPage } from "./views/pages/ConnectionTestPage";
 import { DashboardPage } from "./views/pages/DashboardPage";
 import { DevicesManagePage } from "./views/pages/DevicesManagePage";
+import { EyesPage } from "./views/pages/EyesPage";
 import { ForgotPasswordPage } from "./views/pages/ForgotPasswordPage";
 import { GameSettingsPage } from "./views/pages/GameSettingsPage";
 import { HistoryPage } from "./views/pages/HistoryPage";
@@ -29,6 +30,7 @@ export function App() {
           <Route path="/cadastro" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
+          <Route path="/olhos" element={<EyesPage />} />
 
           <Route path="/tablet" element={<TabletLayout />}>
             <Route index element={<TabletHomePage />} />

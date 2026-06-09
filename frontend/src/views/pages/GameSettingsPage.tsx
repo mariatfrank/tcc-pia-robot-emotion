@@ -90,16 +90,7 @@ export function GameSettingsPage() {
             </div>
           </fieldset>
           <div className="field" style={{ marginTop: "1rem" }}>
-            <label>
-              <input
-                type="checkbox"
-                checked={s.soundEnabled}
-                onChange={(e) =>
-                  patch((p) => ({ ...p, soundEnabled: e.target.checked }))
-                }
-              />{" "}
-              Sons ao acertar ou errar (opcional)
-            </label>
+         
           </div>
         </div>
       </div>

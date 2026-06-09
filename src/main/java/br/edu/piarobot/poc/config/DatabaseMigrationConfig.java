@@ -10,15 +10,40 @@ public class DatabaseMigrationConfig {
 
     @Bean
     ApplicationRunner databaseCompatibilityMigrations(JdbcTemplate jdbcTemplate) {
-        return args -> {
-            jdbcTemplate.execute("alter table if exists robot_sessions add column if not exists play_started boolean default false");
-            jdbcTemplate.execute("update robot_sessions set play_started = false where play_started is null");
-            jdbcTemplate.execute("alter table if exists robot_sessions alter column play_started set default false");
-            jdbcTemplate.execute("alter table if exists robot_sessions alter column play_started set not null");
-            jdbcTemplate.execute("alter table if exists robot_sessions add column if not exists owner_email varchar(320)");
+        return args -> jdbcTemplate.execute("""
+                DO $$
+                BEGIN
+                    IF EXISTS (
+                        SELECT 1
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                          AND table_name = 'robot_sessions'
+                    ) THEN
+                        ALTER TABLE robot_sessions
+                            ADD COLUMN IF NOT EXISTS play_started boolean DEFAULT false;
+                        UPDATE robot_sessions
+                            SET play_started = false
+                            WHERE play_started IS NULL;
+                        ALTER TABLE robot_sessions
+                            ALTER COLUMN play_started SET DEFAULT false;
+                        ALTER TABLE robot_sessions
+                            ALTER COLUMN play_started SET NOT NULL;
+                        ALTER TABLE robot_sessions
+                            ADD COLUMN IF NOT EXISTS owner_email varchar(320);
+                    END IF;
 
-            jdbcTemplate.execute("alter table if exists devices add column if not exists owner_email varchar(320)");
-            jdbcTemplate.execute("alter table if exists devices add column if not exists session_id uuid");
-        };
+                    IF EXISTS (
+                        SELECT 1
+                        FROM information_schema.tables
+                        WHERE table_schema = 'public'
+                          AND table_name = 'devices'
+                    ) THEN
+                        ALTER TABLE devices
+                            ADD COLUMN IF NOT EXISTS owner_email varchar(320);
+                        ALTER TABLE devices
+                            ADD COLUMN IF NOT EXISTS session_id uuid;
+                    END IF;
+                END $$;
+                """);
     }
 }
