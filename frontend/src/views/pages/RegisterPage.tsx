@@ -26,7 +26,7 @@ export function RegisterPage() {
     }
     try {
       await register(name, email, password);
-      nav("/app", { replace: true });
+      nav("/login", { replace: true });
     } catch (ex) {
       setErr(ex instanceof Error ? ex.message : "Falha no cadastro.");
     }
