@@ -93,7 +93,7 @@ public class SessionService {
         String owner = normalizeOwner(ownerEmail);
         if (owner != null) {
             claimUnownedSessions(owner);
-            return sessionRepository.findAllByStatusOrderByFinishedAtDesc(SessionStatus.FINISHED);
+            return sessionRepository.findAllByOwnerEmailAndStatusOrderByFinishedAtDesc(owner, SessionStatus.FINISHED);
         }
         return sessionRepository.findAllByStatusOrderByFinishedAtDesc(SessionStatus.FINISHED);
     }
