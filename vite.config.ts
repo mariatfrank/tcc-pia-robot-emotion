@@ -168,6 +168,7 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
+    allowedHosts: true,
     fs: {
       allow: [path.resolve(__dirname, ".")],
     },
