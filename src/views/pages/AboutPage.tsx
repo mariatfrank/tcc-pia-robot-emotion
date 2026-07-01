@@ -21,6 +21,13 @@ export function AboutPage({ backTo }: { backTo: string }) {
         <PageBack to={backTo} />
         <h1>Sobre o sistema</h1>
         <p>
+          <strong>Como jogar - Acerte o alvo</strong>
+        </p>
+        <p>
+          Quando a partida começar, um alvo vai aparecer na tela, toque no alvo para marcar
+          pontos! Quanto mais alvos acertar durante a partida, mais pontos irá fazer!
+        </p>
+        <p>
           <strong>Versão:</strong> {ver}
         </p>
         <p>
@@ -30,7 +37,7 @@ export function AboutPage({ backTo }: { backTo: string }) {
           O Piá Robot Emotion integra tablet, smartphone (olhos digitais) e este painel
           web com um backend central SpringBoot que registra sessões,
           pontuação e emoções, com armazenamento em banco de dados e mensagens
-          em tempo real entre os componentes. Este projeto foi desenvolvido para o TCC 2 do curso 
+          em tempo real entre os componentes. Este projeto foi desenvolvido para o TCC 2 do curso
           de Análise e Desenvolvimento de Sitemas da UFPR em 2026.
         </p>
       </div>
